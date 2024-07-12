@@ -150,3 +150,203 @@
 
 </body>
 </html>
+
+
+LOGIN PAGE FOR GET AND POST 
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+</head>
+<body>
+    <h2>Login</h2>
+    <form action="http://localhost:3000/login" method="GET">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required><br><br>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required><br><br>
+
+        <input type="submit" value="Login">
+    </form>
+</body>
+
+GET_METHOD
+
+
+const http = require('http');
+const url = require('url');
+
+const server = http.createServer((req, res) => {
+    const parsedUrl = url.parse(req.url, true);
+    
+    if (parsedUrl.pathname === '/login' && req.method === 'GET') {
+        const { username, password } = parsedUrl.query;
+
+        res.writeHead(200, { 'Content-Type': 'text/html' });
+
+        // This is a very basic check. In a real application, you'd validate against a database.
+        if (username === 'admin' && password === 'password') {
+            res.end(<h1>Welcome, ${username}!</h1><p>Login successful.</p>);
+        } else {
+            res.end('<h1>Login Failed</h1><p>Invalid username or password.</p>');
+        }
+    } else {
+        res.writeHead(404, { 'Content-Type': 'text/plain' });
+        res.end('404 Not Found');
+    }
+});
+
+const PORT = 3000;
+server.listen(PORT, () => {
+    console.log(Server running at http://localhost:${PORT}/);
+});
+
+
+
+
+
+POST METHOD
+
+const http = require('http');
+const querystring = require('querystring');
+
+http.createServer(function(req, res) {
+    if (req.method === 'POST' && req.url === '/login') {
+        var data = '';       
+        req.on('data', function(chunk) {
+            console.log(chunk);
+            data += chunk;
+        });
+        req.on('end', function() {
+            var postData = querystring.parse(data);
+            console.log(postData);
+
+            var username = postData['username'];
+            var password = postData['password'];
+
+            if (username !== '' && password !== '') {
+                res.write("<h1>Login Successful</h1>");
+                res.write("<p>Welcome, " + username + "!</p>");
+            } else {
+                res.write("<h1>Login Failed</h1>");
+                res.write("<p>Invalid username or password.</p>");
+            }
+            res.end();
+        });
+    } else {
+        res.end('404 Not Found');
+    }
+}).listen(3000);
+console.log('Server has Started on port 3000.......');
+
+
+
+
+
+
+
+
+FORM VALIDATION
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Form</title>
+</head>
+<body>
+    <form id="registrationForm" onsubmit="return validateForm()">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required><br><br>
+
+        <label for="mobile">Mobile:</label>
+        <input type="tel" id="mobile" name="mobile" required><br><br>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required><br><br>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required><br><br>
+
+        <label for="gender">Gender:</label>
+        <select id="gender" name="gender" required>
+            <option value="">Select Gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+        </select><br><br>
+
+        <label for="dob">Date of Birth:</label>
+        <input type="date" id="dob" name="dob" required><br><br>
+
+        <label for="bloodGroup">Blood Group:</label>
+        <select id="bloodGroup" name="bloodGroup" required>
+            <option value="">Select Blood Group</option>
+            <option value="A+">A+</option>
+            <option value="A-">A-</option>
+            <option value="B+">B+</option>
+            <option value="B-">B-</option>
+            <option value="AB+">AB+</option>
+            <option value="AB-">AB-</option>
+            <option value="O+">O+</option>
+            <option value="O-">O-</option>
+        </select><br><br>
+
+        <input type="submit" value="Submit">
+    </form>
+
+    <script>
+    function validateForm() {
+        var name = document.getElementById('name').value;
+        var mobile = document.getElementById('mobile').value;
+        var email = document.getElementById('email').value;
+        var password = document.getElementById('password').value;
+        var gender = document.getElementById('gender').value;
+        var dob = document.getElementById('dob').value;
+        var bloodGroup = document.getElementById('bloodGroup').value;
+
+        if (!/^[A-Za-z\s]+$/.test(name)) {
+            alert("Name should contain only alphabets");
+            return false;
+        }
+
+        if (!/^\d{10}$/.test(mobile)) {
+            alert("Mobile number should be 10 digits");
+            return false;
+        }
+
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            alert("Invalid email format");
+            return false;
+        }
+
+        if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{6,15}$/.test(password)) {
+            alert("Password must contain at least one lowercase letter, one uppercase letter, one digit, one special character, and be 6-15 characters long");
+            return false;
+        }
+
+        if (!gender) {
+            alert("Please select a gender");
+            return false;
+        }
+
+        if (!dob) {
+            alert("Please enter your date of birth");
+            return false;
+        }
+
+        if (!bloodGroup) {
+            alert("Please select your blood group");
+            return false;
+        }
+
+        return true;
+    }
+    </script>
+</body>
+</html>
