@@ -1,56 +1,98 @@
-<!DOCTYPE html>
 <html>
 <head>
   <title>Bill Calculator</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-image: url('bill2.jpg');
-      background-size: cover;
-      background-position: center;
+      background-color: #f0f0f0;
+      margin: 0;
+      padding: 0;
       display: flex;
       flex-direction: column;
-      justify-content: center;
       align-items: center;
-      min-height: 100vh;
-      margin: 0;
+      justify-content: center;
+      height: 100vh;
     }
 
-    #bill-form,
-    #bill-table,
-    #total-bill-amount {
-      background-color: rgba(255, 255, 255, 0.8);
-      padding: 20px;
-      border-radius: 5px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    h1 {
+      color: #333;
     }
 
     #bill-form {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       margin-bottom: 20px;
+      animation: fadeIn 1s ease-in-out;
     }
 
-    #bill-form input {
-      width: 300px;
+    label {
+      display: block;
+      margin-bottom: 5px;
+      color: #555;
+    }
+
+    input[type="text"],
+    input[type="number"] {
+      width: 100%;
+      padding: 8px;
       margin-bottom: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    h2 {
+      color: #333;
     }
 
     #bill-table {
       width: 100%;
-      max-width: 800px;
       border-collapse: collapse;
+      margin-bottom: 20px;
+      animation: fadeIn 1s ease-in-out;
     }
 
     #bill-table th,
     #bill-table td {
+      border: 1px solid #ddd;
       padding: 10px;
       text-align: left;
     }
 
     #bill-table th {
-      background-color: #f2f2f2;
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    p {
+      font-size: 1.2em;
+      color: #333;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
   </style>
 </head>
@@ -74,7 +116,6 @@
         <th>Quantity</th>
         <th>Price per Unit(₹)</th>
         <th>Total Amount</th>
-        <th>Remove</th>
       </tr>
     </thead>
     <tbody></tbody>
@@ -92,28 +133,19 @@
         var itemTotalAmount = itemQuantity * itemPrice;
         totalBillAmount += itemTotalAmount;
 
-        var row = document.createElement("tr");
-        row.innerHTML = `
+        var row =document.getElementsByTagName("tbody")[0];
+        row.innerHTML += `<tr>
             <td>${itemName}</td>
             <td>${itemQuantity}</td>
             <td>₹${itemPrice.toFixed(2)}</td>
-            <td>₹${itemTotalAmount.toFixed(2)}</td>
-            <td><button type="button" onclick="removeItem(this)">Remove</button></td>
+            <td>₹${itemTotalAmount.toFixed(2)}</td></tr>
         `;
-        document.getElementById("bill-table").getElementsByTagName("tbody")[0].appendChild(row);
         document.getElementById("total-bill-amount").textContent = totalBillAmount.toFixed(2);
         document.getElementById("item-name").value = "";
         document.getElementById("item-quantity").value = "";
         document.getElementById("item-price").value = "";
     }
 
-    function removeItem(button) {
-        var row = button.parentNode.parentNode;
-        var itemTotalAmount = parseFloat(row.getElementsByTagName("td")[3].textContent.slice(1)); // Remove '₹' before parsing
-        totalBillAmount -= itemTotalAmount;
-        row.parentNode.removeChild(row);
-        document.getElementById("total-bill-amount").textContent = totalBillAmount.toFixed(2);
-    }
 </script>
 
 </body>
