@@ -1,0 +1,353 @@
+<html>
+<head>
+  <title>Bill Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      margin: 0;
+      padding: 0;
+    
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    #bill-form {
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      color: #555;
+    }
+
+    input[type="text"],
+    input[type="number"] {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    h2 {
+      color: #333;
+    }
+
+    #bill-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    #bill-table th,
+    #bill-table td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: left;
+    }
+
+    #bill-table th {
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    p {
+      font-size: 1.2em;
+      color: #333;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Bill Calculator</h1>
+  <div id="bill-form">
+    <label for="item-name">Item Name:</label>
+    <input type="text" id="item-name" name="item-name">
+    <label for="item-quantity">Quantity:</label>
+    <input type="number" id="item-quantity" name="item-quantity">
+    <label for="item-price">Price per Unit:</label>
+    <input type="number" id="item-price" name="item-price">
+    <button type="button" onclick="addItem()" required>Add Item</button>
+  </div>
+
+  <h2>Bill Summary:</h2>
+  <table id="bill-table">
+    <thead>
+      <tr>
+        <th>Item Name</th>
+        <th>Quantity</th>
+        <th>Price per Unit(₹)</th>
+        <th>Total Amount</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+  <br>
+  <p>Total Bill Amount: ₹<span id="total-bill-amount">0.00</span></p>
+
+  <script>
+    var totalBillAmount = 0;
+
+    function addItem() {
+        var itemName = document.getElementById("item-name").value;
+        var itemQuantity = parseFloat(document.getElementById("item-quantity").value);
+        var itemPrice = parseFloat(document.getElementById("item-price").value);
+        var itemTotalAmount = itemQuantity * itemPrice;
+        totalBillAmount += itemTotalAmount;
+
+        var row =document.getElementsByTagName("tbody")[0];
+        row.innerHTML += `<tr>
+            <td>${itemName}</td>
+            <td>${itemQuantity}</td>
+            <td>₹${itemPrice.toFixed(2)}</td>
+            <td>₹${itemTotalAmount.toFixed(2)}</td></tr>
+        `;
+        document.getElementById("total-bill-amount").textContent = totalBillAmount.toFixed(2);
+        document.getElementById("item-name").value = "";
+        document.getElementById("item-quantity").value = "";
+        document.getElementById("item-price").value = "";
+    }
+
+</script>
+
+</body>
+</html>
+
+
+LOGIN PAGE FOR GET AND POST 
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+</head>
+<body>
+    <h2>Login</h2>
+    <form action="http://localhost:3000/login" method="GET">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required><br><br>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required><br><br>
+
+        <input type="submit" value="Login">
+    </form>
+</body>
+
+GET_METHOD
+
+
+const http = require('http');
+const url = require('url');
+
+const server = http.createServer((req, res) => {
+    const parsedUrl = url.parse(req.url, true);
+    
+    if (parsedUrl.pathname === '/login' && req.method === 'GET') {
+        const { username, password } = parsedUrl.query;
+
+        res.writeHead(200, { 'Content-Type': 'text/html' });
+
+        // This is a very basic check. In a real application, you'd validate against a database.
+        if (username === 'admin' && password === 'password') {
+            res.end(<h1>Welcome, ${username}!</h1><p>Login successful.</p>);
+        } else {
+            res.end('<h1>Login Failed</h1><p>Invalid username or password.</p>');
+        }
+    } else {
+        res.writeHead(404, { 'Content-Type': 'text/plain' });
+        res.end('404 Not Found');
+    }
+});
+
+const PORT = 3000;
+server.listen(PORT, () => {
+    console.log(Server running at http://localhost:${PORT}/);
+});
+
+
+
+
+
+POST METHOD
+
+const http = require('http');
+const querystring = require('querystring');
+
+http.createServer(function(req, res) {
+    if (req.method === 'POST' && req.url === '/login') {
+        var data = '';       
+        req.on('data', function(chunk) {
+            console.log(chunk);
+            data += chunk;
+        });
+        req.on('end', function() {
+            var postData = querystring.parse(data);
+            console.log(postData);
+
+            var username = postData['username'];
+            var password = postData['password'];
+
+            if (username !== '' && password !== '') {
+                res.write("<h1>Login Successful</h1>");
+                res.write("<p>Welcome, " + username + "!</p>");
+            } else {
+                res.write("<h1>Login Failed</h1>");
+                res.write("<p>Invalid username or password.</p>");
+            }
+            res.end();
+        });
+    } else {
+        res.end('404 Not Found');
+    }
+}).listen(3000);
+console.log('Server has Started on port 3000.......');
+
+
+
+
+
+
+
+
+FORM VALIDATION
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Form</title>
+</head>
+<body>
+    <form id="registrationForm" onsubmit="return validateForm()">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required><br><br>
+
+        <label for="mobile">Mobile:</label>
+        <input type="tel" id="mobile" name="mobile" required><br><br>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required><br><br>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required><br><br>
+
+        <label for="gender">Gender:</label>
+        <select id="gender" name="gender" required>
+            <option value="">Select Gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+        </select><br><br>
+
+        <label for="dob">Date of Birth:</label>
+        <input type="date" id="dob" name="dob" required><br><br>
+
+        <label for="bloodGroup">Blood Group:</label>
+        <select id="bloodGroup" name="bloodGroup" required>
+            <option value="">Select Blood Group</option>
+            <option value="A+">A+</option>
+            <option value="A-">A-</option>
+            <option value="B+">B+</option>
+            <option value="B-">B-</option>
+            <option value="AB+">AB+</option>
+            <option value="AB-">AB-</option>
+            <option value="O+">O+</option>
+            <option value="O-">O-</option>
+        </select><br><br>
+
+        <input type="submit" value="Submit">
+    </form>
+
+    <script>
+    function validateForm() {
+        var name = document.getElementById('name').value;
+        var mobile = document.getElementById('mobile').value;
+        var email = document.getElementById('email').value;
+        var password = document.getElementById('password').value;
+        var gender = document.getElementById('gender').value;
+        var dob = document.getElementById('dob').value;
+        var bloodGroup = document.getElementById('bloodGroup').value;
+
+        if (!/^[A-Za-z\s]+$/.test(name)) {
+            alert("Name should contain only alphabets");
+            return false;
+        }
+
+        if (!/^\d{10}$/.test(mobile)) {
+            alert("Mobile number should be 10 digits");
+            return false;
+        }
+
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            alert("Invalid email format");
+            return false;
+        }
+
+        if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{6,15}$/.test(password)) {
+            alert("Password must contain at least one lowercase letter, one uppercase letter, one digit, one special character, and be 6-15 characters long");
+            return false;
+        }
+
+        if (!gender) {
+            alert("Please select a gender");
+            return false;
+        }
+
+        if (!dob) {
+            alert("Please enter your date of birth");
+            return false;
+        }
+
+        if (!bloodGroup) {
+            alert("Please select your blood group");
+            return false;
+        }
+
+        return true;
+    }
+    </script>
+</body>
+</html>
